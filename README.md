@@ -36,3 +36,7 @@ For #1:
   Updated the draw method to draw beams.
 
   TODO: make explode method in Star class. See Beam#update:175
+
+Team 3
+- add code for time delta
+- every ten seconds you gain a life (configure in Player#update_delta)
