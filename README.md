@@ -20,3 +20,13 @@ The speed-sprint project can be found here: https://github.com/k00ka/speed-sprin
 4. Enemies shoot back
 
   Add some new enemy types that appear and shoot at the player. Don't make them too smart!
+
+
+
+  # Shooting beams
+
+  Added methods for ship to shoot beams.
+
+  Updated the draw method to draw beams.
+
+  TODO: make explode method in Star class. See Beam#update:175
