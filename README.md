@@ -20,3 +20,10 @@ The speed-sprint project can be found here: https://github.com/k00ka/speed-sprin
 4. Enemies shoot back
 
   Add some new enemy types that appear and shoot at the player. Don't make them too smart!
+
+-------------------------------
+
+For #1:
+    Added Player lives.  Initialized to 5.  Decrements at "collect stars"
+    Player has an method is_dead?   When player.is_dead?, we display a message.
+
