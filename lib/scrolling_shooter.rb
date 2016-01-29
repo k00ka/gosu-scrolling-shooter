@@ -121,6 +121,7 @@ class Player
     @x, @y = x, y
     @score = 0
     @lives = 5
+    @elapsed = 0
   end
 
   def move_left
@@ -147,7 +148,14 @@ class Player
     @lives == 0
   end
 
-
+  def update_delta(delta)
+    return if is_dead?
+    @elapsed += delta
+    if @elapsed > 10_000
+      @lives += 1
+      @elapsed = 0
+    end
+  end
 
   def collect_stars(stars)
     stars.reject! do |star|
@@ -259,15 +267,17 @@ class ScrollingShooter < Gosu::Window
     @obstacles = Array.new
     @beams = Array.new
     @font = Gosu::Font.new(20)
+    @last_time = 0
   end
 
   def update
+    self.update_delta
     @player.move_left if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft
     @player.move_right if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight
     @player.accelerate if Gosu::button_down? Gosu::KbUp or Gosu::button_down? Gosu::GpUp
     @player.brake if Gosu::button_down? Gosu::KbDown or Gosu::button_down? Gosu::GpDown
-    
 
+    @player.update_delta(@delta)
     @player.collect_stars(@stars)
 
     @stars.reject! { |star| !star.update }
@@ -303,5 +313,11 @@ class ScrollingShooter < Gosu::Window
     end
 
     @gl_background.draw(ZOrder::Background)
+  end
+
+  def update_delta
+    current_time = Gosu::milliseconds
+    @delta = current_time - @last_time
+    @last_time = current_time
   end
 end
