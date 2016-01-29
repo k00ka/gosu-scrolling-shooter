@@ -113,12 +113,14 @@ class Player
   Speed = 7
 
   attr_reader :score
+  attr_reader :lives
 
   def initialize(x, y)
     @image = Gosu::Image.new("media/starfighter.bmp")
     @beep = Gosu::Sample.new("media/beep.wav")
     @x, @y = x, y
     @score = 0
+    @lives = 5
   end
 
   def move_left
@@ -141,10 +143,17 @@ class Player
     @image.draw(@x - @image.width / 2, @y - @image.height / 2, ZOrder::Player)
   end
 
+  def is_dead?
+    @lives == 0
+  end
+
+
+
   def collect_stars(stars)
     stars.reject! do |star|
       if Gosu::distance(@x, @y, star.x, star.y) < 35 then
-        @score += 10
+        @lives = [0, @lives -1].max
+
         @beep.play
         true
       else
@@ -250,6 +259,14 @@ class ScrollingShooter < Gosu::Window
     @stars.each { |star| star.draw }
     @obstacles.each { |obstacle| obstacle.draw }
     @font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+
+    @font.draw("Lives: #{@player.lives}", 10, 20, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+
+    if(@player.is_dead?)
+      @font.draw("Sooooo sad:  You died! ", 300, 300, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+
+    end
+
     @gl_background.draw(ZOrder::Background)
   end
 end
