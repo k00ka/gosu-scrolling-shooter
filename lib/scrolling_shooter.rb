@@ -161,6 +161,30 @@ class Player
       end
     end
   end
+
+  def shoot
+    Beam.new(@x, @y)
+
+  end
+end
+
+class Beam < Player
+  Speed = 15
+  def initialize(x, y)
+    @image = Gosu::Image.from_text("|", 15, align: :center)
+    @beep = Gosu::Sample.new("media/beep.wav")
+    @x, @y = x, y
+    @score = 0
+  end
+
+  def update (stars)
+    @y -= Speed
+    stars.each do |i|
+      if Gosu.distance(i.x, i.y, @x, @y) < 5
+        # send the star, i, the explode message
+      end
+    end
+  end
 end
 
 # Also taken from the tutorial, but drawn with draw_rot and an increasing angle
@@ -233,7 +257,7 @@ class ScrollingShooter < Gosu::Window
     @obstacle_anim = Gosu::Image::load_tiles("media/earth.png", 25, 25)
     @stars = Array.new
     @obstacles = Array.new
-
+    @beams = Array.new
     @font = Gosu::Font.new(20)
   end
 
@@ -242,10 +266,12 @@ class ScrollingShooter < Gosu::Window
     @player.move_right if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight
     @player.accelerate if Gosu::button_down? Gosu::KbUp or Gosu::button_down? Gosu::GpUp
     @player.brake if Gosu::button_down? Gosu::KbDown or Gosu::button_down? Gosu::GpDown
+    
 
     @player.collect_stars(@stars)
 
     @stars.reject! { |star| !star.update }
+    @beams.reject! { |beam| !beam.update (@stars)}
     @obstacles.reject! { |obstacle| !obstacle.update }
 
     @gl_background.scroll
@@ -254,9 +280,18 @@ class ScrollingShooter < Gosu::Window
     @obstacles.push(Obstacle.new(@obstacle_anim)) if rand(10) == 0
   end
 
+  def button_down (id)
+    case id 
+    when Gosu::KbSpace then
+      beam = @player.shoot
+      @beams << beam
+    end
+  end
+
   def draw
     @player.draw
     @stars.each { |star| star.draw }
+    @beams.each { |beam| beam.draw }
     @obstacles.each { |obstacle| obstacle.draw }
     @font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
 
