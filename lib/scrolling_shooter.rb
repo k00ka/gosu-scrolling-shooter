@@ -266,9 +266,10 @@ class ScrollingShooter < Gosu::Window
     @player.move_right if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight
     @player.accelerate if Gosu::button_down? Gosu::KbUp or Gosu::button_down? Gosu::GpUp
     @player.brake if Gosu::button_down? Gosu::KbDown or Gosu::button_down? Gosu::GpDown
-    
+
 
     @player.collect_stars(@stars)
+    @player.collect_stars(@obstacles)
 
     @stars.reject! { |star| !star.update }
     @beams.reject! { |beam| !beam.update (@stars)}
@@ -277,11 +278,11 @@ class ScrollingShooter < Gosu::Window
     @gl_background.scroll
 
     @stars.push(Star.new(@star_anim)) if rand(20) == 0
-    @obstacles.push(Obstacle.new(@obstacle_anim)) if rand(10) == 0
+    @obstacles.push(Obstacle.new(@obstacle_anim)) if rand(20) == 0
   end
 
   def button_down (id)
-    case id 
+    case id
     when Gosu::KbSpace then
       beam = @player.shoot
       @beams << beam
