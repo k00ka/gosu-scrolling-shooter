@@ -27,3 +27,12 @@ For #1:
     Added Player lives.  Initialized to 5.  Decrements at "collect stars"
     Player has an method is_dead?   When player.is_dead?, we display a message.
 
+
+
+  # Shooting beams
+
+  Added methods for ship to shoot beams.
+
+  Updated the draw method to draw beams.
+
+  TODO: make explode method in Star class. See Beam#update:175
